@@ -1,0 +1,83 @@
+
+package lab4;
+
+
+import java.awt.Color;
+
+import sedgewick.StdDraw;
+import cse131.ArgsProcessor;
+
+public class BumpingBalls {
+	
+
+	public static void main(String[] args) {
+		ArgsProcessor ap = new ArgsProcessor(args);
+		int balls = ap.nextInt("How many balls be bumpin'?");
+		int iterations = ap.nextInt("How many iterations?");
+
+		double[][] ballData = new double[balls][8];
+
+		for (int i=0; i<balls; i++){
+			double radius = Math.random()*.07;
+			double ballX = radius+(Math.random())*(1-2*radius);
+			double ballY = radius+(Math.random())*(1-2*radius);
+			double velocityX = Math.random()*.01;
+			double velocityY = Math.random()*.01;
+			double red = Math.round((Math.random()*255));
+			double green = Math.round((Math.random()*255));
+			double blue = Math.round((Math.random()*255));
+			ballData[i][0]=ballX;
+			ballData[i][1]=ballY;
+			ballData[i][2]=velocityX;
+			ballData[i][3]=velocityY;
+			ballData[i][4]=radius;
+			ballData[i][5]=red;
+			ballData[i][6]=blue;
+			ballData[i][7]=green;
+		}
+
+		for (int m=0; m<=iterations; m++){
+			StdDraw.clear();
+			for (int i=0; i<balls; i++){
+				for (int j=0; j<balls; j++){
+					if (i != j){
+						if (Math.abs(ballData[i][0]-ballData[j][0])<=(ballData[i][4]+ballData[j][4])&&Math.abs(ballData[i][1]-ballData[j][1])<=(ballData[i][4]+ballData[j][4])){
+							ballData[i][2]=-ballData[i][2];
+							ballData[i][3]=-ballData[i][3];
+							ballData[j][2]=-ballData[j][2];
+							ballData[j][3]=-ballData[j][3];
+							ballData[i][0]=ballData[i][0]+ballData[i][2];
+							ballData[i][1]=ballData[i][1]+ballData[i][3];
+							ballData[j][0]=ballData[j][0]+ballData[j][2];
+							ballData[j][1]=ballData[j][1]+ballData[j][3];
+							ballData[i][5] = Math.random()*255;
+							ballData[i][6] = Math.random()*255;
+							ballData[i][7] = Math.random()*255;
+							ballData[j][5] = Math.random()*255;
+							ballData[j][6] = Math.random()*255;
+							ballData[j][7] = Math.random()*255;
+						}
+					}				
+				}
+				if (Math.abs((ballData[i][0]+ballData[i][2]))>(1-ballData[i][4])||Math.abs((ballData[i][0]+ballData[i][2]))<(ballData[i][4])){
+					ballData[i][2] = -ballData[i][2];
+					ballData[i][5] = Math.random()*255;
+					ballData[i][6] = Math.random()*255;
+					ballData[i][7] = Math.random()*255;
+				}
+				if (Math.abs((ballData[i][1]+ballData[i][3]))>(1-ballData[i][4])||Math.abs((ballData[i][1]+ballData[i][3]))<(ballData[i][4])){
+					ballData[i][3] = -ballData[i][3];
+					ballData[i][5] = Math.random()*255;
+					ballData[i][6] = Math.random()*255;
+					ballData[i][7] = Math.random()*255;
+				}
+				ballData[i][0]=ballData[i][0]+ballData[i][2];
+				ballData[i][1]=ballData[i][1]+ballData[i][3];
+				Color c = new Color(Math.round((int)ballData[i][5]), Math.round((int)ballData[i][6]), Math.round((int)ballData[i][7]));
+				StdDraw.setPenColor(c);
+				StdDraw.filledCircle(ballData[i][0], ballData[i][1], ballData[i][4]);
+			}
+			StdDraw.show(20);
+		}
+	}
+}
